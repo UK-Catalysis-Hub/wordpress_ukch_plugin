@@ -50,7 +50,9 @@ function get_articles_data($atts){
 		if ( $result["page"]!="" ) {
 			$html .=  "page " . $result["issue"] . ". ";
 		}
-		$html .=  "DOI: <a href=\"https://doi.org/". $result["doi"] ."\">" . $result["doi"] . " </a>";
+		if ( $result["doi"]!="" ) {
+			$html .=  "DOI: <a href=\"https://doi.org/". $result["doi"] ."\">" . $result["doi"] . " </a>";
+		}
 		$html .= "</p>";
 	}
 	return $html;
