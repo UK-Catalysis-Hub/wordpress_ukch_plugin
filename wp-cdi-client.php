@@ -33,7 +33,12 @@ function get_articles_data($atts){
 	$results = get_articles ($atts['action'] . '.json', $params);
 
 	$html = "";
-	$html = "<h2>" . $atts['title']." - "  . $atts['year'] . "</h2>";
+	if ($atts['title']!= ""){
+		$html = "<h2>" . $atts['title']." - "  . $atts['year'] . "</h2>";
+	}
+	else{
+		$html = "<h2>" . $atts['year'] . "</h2>";
+	}
 	//parse the data and return a list of paragraphs
 	foreach ($results as $result){
 		$html .= "<p>";
