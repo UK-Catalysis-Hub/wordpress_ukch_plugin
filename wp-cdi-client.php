@@ -4,7 +4,7 @@
    GitHub Plugin URI: https://github.com/UK-Catalysis-Hub/wordpress_ukch_plugin
    description: >-
     Plugin to get data from UKCH CDI
-   Version: 0.1
+   Version: 0.2
    Author: Abraham Nieva de la Hidalga
    Author URI: https://github.com/UK-Catalysis-Hub
    License: CC0
