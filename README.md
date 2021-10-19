@@ -1,4 +1,4 @@
-# wordpress_ukch_api_plugin
+# Wordpress UKCH plugin
 Plugin and widget for displaying ukch api on wordpress
 
 Code developed/derived from the examples at
@@ -9,4 +9,4 @@ Code developed/derived from the examples at
 - https://www.wpbeginner.com/wp-tutorials/how-to-create-a-custom-wordpress-widget/
 - https://www.youtube.com/watch?v=I-P183PvRIQ
 
-The plugin code should be copied to the public_html\wp-content\plugins\rubyclient and then activated with wordpress admin
+The plugin code should be copied to the public_html\wp-content\plugins\wordpress_ukch_plugin and then activate it with wordpress admin
