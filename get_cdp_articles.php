@@ -1,10 +1,9 @@
 <?php
    /*
-   Plugin Name: UKCH CDI Client API
+   Plugin Name: Get CDP articles bibliographic list
    GitHub Plugin URI: https://github.com/UK-Catalysis-Hub/wordpress_ukch_plugin
-   description: >-
-    Plugin to get data from UKCH CDI
-   Version: 0.2
+   description: Plugin to get data from comunity data portal. Call it as [articles_list theme="Transformations" year="2018" title="Transformations"]
+   Version: 0.3
    Author: Abraham Nieva de la Hidalga
    Author URI: https://github.com/UK-Catalysis-Hub
    License: CC0
@@ -13,24 +12,26 @@
 defined('ABSPATH') || die('unauthorised access');
 
 // Action when user logs into admin panel
-add_shortcode( 'ukch_articles', 'get_articles_data' );
+add_shortcode('articles_list', 'get_articles');
 
-function get_articles_data($atts){
-	
-	$defaults = [
+function get_articles($atts) {
+    // Set default attributes
+    $defaults = array(
 		'title' => 'Table Title',
 		'action' => 'get_pubs',
 		'year' => '2020',
-		'theme' => 'BAG'
-	];
-	$atts = shortcode_atts($defaults, $atts, 'ukch_articles');
-	
-	$params = array(
+		'theme' => 'BAG',
+        );
+
+    $atts = shortcode_atts($defaults, $atts);
+
+    $params = array(
 		'theme' =>  $atts['theme'],
-		'year' =>  $atts['year']
+		'year' =>  $atts['year'],
 	);	
-	
-	$results = get_articles ($atts['action'] . '.json', $params);
+
+    // call api and get articles data
+    $results = get_articles_data ($atts['action'] . '.json', $params);
 
 	$html = "";
 	if ($atts['title']!= ""){
@@ -39,7 +40,8 @@ function get_articles_data($atts){
 	else{
 		$html = "<h2>" . $atts['year'] . "</h2>";
 	}
-	//parse the data and return a list of paragraphs
+
+    	//parse the data and return a list of paragraphs
 	foreach ($results as $result){
 		$html .= "<p>";
 		$html .= $result["authors"];
@@ -60,10 +62,12 @@ function get_articles_data($atts){
 		}
 		$html .= "</p>";
 	}
-	return $html;
+
+    // Build the output
+    return $html;
 }
 
-function get_articles( $action, $params ) {
+function get_articles_data( $action, $params ) {
  
     $api_endpoint = "http://188.166.149.246/";
  
@@ -73,23 +77,20 @@ function get_articles( $action, $params ) {
  
     // Create URL with params
     $url = $api_endpoint . $action . '?' . http_build_query($params);
- 
-    // Use curl to make the query
-    $ch = curl_init();
- 
-    curl_setopt_array(
-        $ch, array( 
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true
-        )
-    );
- 
-    $output = curl_exec($ch);
- 
+
+    $response = wp_remote_get($url);
+    if (is_wp_error($response)) {
+        return 'Error retrieving data.';
+    }
+
+    // get body from response
+    $body = wp_remote_retrieve_body($response);
     // Decode output into an array
-    $json_data = json_decode( $output, true );
- 
-    curl_close( $ch );
- 
+    $json_data = json_decode($body, true);
+
+    // Check for JSON errors
+    if ( json_last_error() !== JSON_ERROR_NONE ) {
+        return 'Invalid JSON response.';
+    }
     return $json_data;
 }
