@@ -3,7 +3,7 @@
    Plugin Name: Get CDP articles bibliographic list
    GitHub Plugin URI: https://github.com/UK-Catalysis-Hub/wordpress_ukch_plugin
    description: Plugin to get data from comunity data portal. Call it as [articles_list theme="Transformations" year="2018" title="Transformations"]
-   Version: 0.3
+   Version: 0.31
    Author: Abraham Nieva de la Hidalga
    Author URI: https://github.com/UK-Catalysis-Hub
    License: CC0
@@ -17,29 +17,34 @@ add_shortcode('articles_list', 'get_articles');
 function get_articles($atts) {
     // Set default attributes
     $defaults = array(
-		'title' => 'Table Title',
+		'title' => '',
 		'action' => 'get_pubs',
-		'year' => '2020',
-		'theme' => 'BAG',
+		'year' => '',
+		'theme' => '',
         );
 
     $atts = shortcode_atts($defaults, $atts);
 
-    $params = array(
-		'theme' =>  $atts['theme'],
-		'year' =>  $atts['year'],
-	);	
+    $params = array();
+
+    if (!empty($atts['theme'])){
+        $params['theme'] =  $atts['theme'];
+    }
+
+	if (!empty($atts['year'])){
+		$params['year'] =  $atts['year'];
+    }
 
     // call api and get articles data
     $results = get_articles_data ($atts['action'] . '.json', $params);
 
 	$html = "";
-	if ($atts['title']!= ""){
+	/*if ($atts['title']!= ""){
 		$html = "<h2>" . $atts['title']." - "  . $atts['year'] . "</h2>";
 	}
 	else{
 		$html = "<h2>" . $atts['year'] . "</h2>";
-	}
+	}*/
 
     	//parse the data and return a list of paragraphs
 	foreach ($results as $result){
