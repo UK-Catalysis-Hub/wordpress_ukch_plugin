@@ -17,11 +17,12 @@ add_shortcode('articles_list', 'get_articles');
 function get_articles($atts) {
     // Set default attributes
     $defaults = array(
+        'endpoint' => 'http://188.166.149.246/',
 		'title' => '',
 		'action' => 'get_pubs',
 		'year' => '',
 		'theme' => '',
-        );
+    );
 
     $atts = shortcode_atts($defaults, $atts);
 
@@ -36,7 +37,7 @@ function get_articles($atts) {
     }
 
     // call api and get articles data
-    $results = get_articles_data ($atts['action'] . '.json', $params);
+    $results = get_articles_data ($atts['endpoint'], $atts['action'] . '.json', $params);
 
 	$html = "";
 
@@ -66,9 +67,9 @@ function get_articles($atts) {
     return $html;
 }
 
-function get_articles_data( $action, $params ) {
+function get_articles_data($api_endpoint, $action, $params ) {
  
-    $api_endpoint = "http://188.166.149.246/";
+    #$api_endpoint = "http://188.166.149.246/";
  
     if ( null == $params ) {
         $params = array();
